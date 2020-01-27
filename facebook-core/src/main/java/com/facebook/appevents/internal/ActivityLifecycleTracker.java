@@ -31,7 +31,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.LoggingBehavior;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.appevents.aam.MetadataIndexer;
-import com.facebook.appevents.codeless.CodelessManager;
 import com.facebook.appevents.suggestedevents.SuggestedEventsManager;
 import com.facebook.internal.FeatureManager;
 import com.facebook.internal.FetchedAppSettings;
@@ -79,11 +78,7 @@ public class ActivityLifecycleTracker {
         new FeatureManager.Callback() {
           @Override
           public void onCompleted(boolean enabled) {
-            if (enabled) {
-              CodelessManager.enable();
-            } else {
-              CodelessManager.disable();
-            }
+            // no-op
           }
         });
 
@@ -173,7 +168,6 @@ public class ActivityLifecycleTracker {
     ActivityLifecycleTracker.currentActivityAppearTime = currentTime;
     final String activityName = Utility.getActivityName(activity);
 
-    CodelessManager.onActivityResumed(activity);
     MetadataIndexer.onActivityResumed(activity);
     SuggestedEventsManager.trackActivity(activity);
 
@@ -220,7 +214,6 @@ public class ActivityLifecycleTracker {
     final long currentTime = System.currentTimeMillis();
 
     final String activityName = Utility.getActivityName(activity);
-    CodelessManager.onActivityPaused(activity);
     Runnable handleActivityPaused =
         new Runnable() {
           @Override
@@ -275,7 +268,7 @@ public class ActivityLifecycleTracker {
   }
 
   private static void onActivityDestroyed(Activity activity) {
-    CodelessManager.onActivityDestroyed(activity);
+    // no-op
   }
 
   private static int getSessionTimeoutInSeconds() {
